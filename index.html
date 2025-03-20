@@ -17,21 +17,37 @@
           album: "Album",
         });
 
+        const audio = document.querySelector("audio");
+
+        // Play/Pause Buttons
         navigator.mediaSession.setActionHandler("play", () => {
-          document.querySelector("audio").play();
+          audio.play();
         });
 
         navigator.mediaSession.setActionHandler("pause", () => {
-          document.querySelector("audio").pause();
+          audio.pause();
         });
-        navigator.mediaSession.setActionHandler("pause", () => {
-          document.querySelector("audio").pause();
+
+        // **Vorspulen (z.B. 10 Sekunden vor)**
+        navigator.mediaSession.setActionHandler("seekforward", (details) => {
+          const seekTime = details.seekOffset || 10; // Standardmäßig 10 Sekunden
+          audio.currentTime = Math.min(
+            audio.currentTime + seekTime,
+            audio.duration
+          );
         });
-        navigator.mediaSession.setActionHandler("seekbackward", () => {
-          document.querySelector("audio").pause();
+
+        // **Zurückspulen (z.B. 10 Sekunden zurück)**
+        navigator.mediaSession.setActionHandler("seekbackward", (details) => {
+          const seekTime = details.seekOffset || 10; // Standardmäßig 10 Sekunden
+          audio.currentTime = Math.max(audio.currentTime - seekTime, 0);
         });
-        navigator.mediaSession.setActionHandler("seekforward", () => {
-          document.querySelector("audio").pause();
+
+        // **Direktes Springen zu einer bestimmten Stelle (optional)**
+        navigator.mediaSession.setActionHandler("seekto", (details) => {
+          if (details.seekTime !== undefined) {
+            audio.currentTime = details.seekTime;
+          }
         });
       }
     </script>
