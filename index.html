@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -9,5 +9,22 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      if ("mediaSession" in navigator) {
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: "Mein Audio",
+          artist: "Künstler",
+          album: "Album",
+        });
+
+        navigator.mediaSession.setActionHandler("play", () => {
+          document.querySelector("audio").play();
+        });
+
+        navigator.mediaSession.setActionHandler("pause", () => {
+          document.querySelector("audio").pause();
+        });
+      }
+    </script>
   </body>
 </html>

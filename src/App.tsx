@@ -26,6 +26,7 @@ function App() {
         </p>
       </div>
       <audio controls src="rainy-day-in-town-with-birds-singing-194011.mp3"></audio>
+      <video controls src="rainy-day-in-town-with-birds-singing-194011.mp3"></video>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
