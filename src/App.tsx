@@ -1,10 +1,53 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
 
 function App() {
   const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if ("mediaSession" in navigator) {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: "Mein Audio",
+        artist: "Künstler",
+        album: "Album",
+      });
+
+      const audio = document.querySelector("audio")!;
+      console.log(audio)
+      // Play/Pause Buttons
+      navigator.mediaSession.setActionHandler("play", () => {
+        audio.play();
+      });
+
+      navigator.mediaSession.setActionHandler("pause", () => {
+        audio.pause();
+      });
+
+      // **Vorspulen (z.B. 10 Sekunden vor)**
+      navigator.mediaSession.setActionHandler("seekforward", (details) => {
+        const seekTime = details.seekOffset || 10; // Standardmäßig 10 Sekunden
+        audio.currentTime = Math.min(
+          audio.currentTime + seekTime,
+          audio.duration
+        );
+      });
+
+      // **Zurückspulen (z.B. 10 Sekunden zurück)**
+      navigator.mediaSession.setActionHandler("seekbackward", (details) => {
+        const seekTime = details.seekOffset || 10; // Standardmäßig 10 Sekunden
+        audio.currentTime = Math.max(audio.currentTime - seekTime, 0);
+      });
+
+      // **Direktes Springen zu einer bestimmten Stelle (optional)**
+      navigator.mediaSession.setActionHandler("seekto", (details) => {
+        if (details.seekTime !== undefined) {
+          audio.currentTime = details.seekTime;
+        }
+      });
+    }
+  }, [])
 
   return (
     <>
