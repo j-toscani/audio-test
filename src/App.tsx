@@ -15,7 +15,6 @@ function App() {
       });
 
       const audio = document.querySelector("audio")!;
-      console.log(audio)
       // Play/Pause Buttons
       navigator.mediaSession.setActionHandler("play", () => {
         audio.play();
@@ -25,12 +24,20 @@ function App() {
         audio.pause();
       });
 
+      navigator.mediaSession.setActionHandler("previoustrack", () => {
+        console.log("prev track");
+      });
+
+      navigator.mediaSession.setActionHandler("nexttrack", function () {
+        console.log("next track");
+      });
+
       // **Vorspulen (z.B. 10 Sekunden vor)**
       navigator.mediaSession.setActionHandler("seekforward", (details) => {
         const seekTime = details.seekOffset || 10; // Standardmäßig 10 Sekunden
         audio.currentTime = Math.min(
           audio.currentTime + seekTime,
-          audio.duration
+          audio.duration,
         );
       });
 
@@ -39,15 +46,8 @@ function App() {
         const seekTime = details.seekOffset || 10; // Standardmäßig 10 Sekunden
         audio.currentTime = Math.max(audio.currentTime - seekTime, 0);
       });
-
-      // **Direktes Springen zu einer bestimmten Stelle (optional)**
-      navigator.mediaSession.setActionHandler("seekto", (details) => {
-        if (details.seekTime !== undefined) {
-          audio.currentTime = details.seekTime;
-        }
-      });
     }
-  }, [])
+  }, []);
 
   return (
     <>
@@ -68,10 +68,12 @@ function App() {
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
       </div>
-      <audio controls src="rainy-day-in-town-with-birds-singing-194011.mp3"></audio>
+      <audio controls src="rainy-day-in-town-with-birds-singing-194011.mp3">
+      </audio>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
+
     </>
   );
 }
